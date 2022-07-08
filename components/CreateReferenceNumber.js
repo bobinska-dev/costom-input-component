@@ -24,7 +24,7 @@ const CreateReferenceNumber = (props) => {
                 {field.type?.title}
             </Heading>
         ),
-        name: `heading${title
+        name: `heading-${title
             .toLowerCase()
             .replace(/\s/g, "")
             .replace(/[^\w-]+/g, "")

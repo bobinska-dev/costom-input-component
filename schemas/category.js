@@ -1,5 +1,6 @@
 import ComputedField from 'sanity-plugin-computed-field'
 import CreateReferenceNumber from '../components/CreateReferenceNumber'
+import getReferences from '../components/getReferences'
 
 export default {
   name: 'category',
@@ -11,7 +12,20 @@ export default {
       title: 'Title',
       type: 'string',
     },
-    new CreateReferenceNumber('hello', 'h3'),
+    // CreateReferenceNumber('hello', 'h3'),
+    {
+      name: 'refNum',
+      description: 'test Saskia',
+      type: 'number',
+      inputComponent: getReferences,
+      options: {
+        documentQuerySelection: `
+        "numReferenced": count(*[_type == "post" && references(^._id)])`,
+        reduceQueryResult: (queryResult) => {
+          return [queryResult.numReferenced]
+        },
+      },
+    },
     {
       name: 'numReferenced',
       title: 'Number of references',
