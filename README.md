@@ -14,8 +14,9 @@ Feel free to add to it.
 
 ### PreviewRef, category for Reference Preview 
 
-[components/PreviewRef](https://github.com/bobinska-dev/costom-input-component/blob/master/components/PreviewRef.js)
-[schemas/category.js](https://github.com/bobinska-dev/costom-input-component/blob/master/schemas/category.js)
+- [components/PreviewRef](https://github.com/bobinska-dev/costom-input-component/blob/master/components/PreviewRef.js)
+
+- [schemas/category.js](https://github.com/bobinska-dev/costom-input-component/blob/master/schemas/category.js)
 
 ### Adding Routing is somehow done in "MyTool" Plugin
 
