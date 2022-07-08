@@ -1,6 +1,6 @@
 # PLANS / TODO'S
 
-:checkmark_white: These are the next Steps (Saskia):
+:white_check_mark: These are the next Steps (Saskia):
 
 - Add prop-types to PreviewRef -> no crashing when adding new category!!!
 - Include basic Routing to List of references
