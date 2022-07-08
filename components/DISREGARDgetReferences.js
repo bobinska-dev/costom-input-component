@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useCallback, forwardRef } from 'react'
 import { withDocument } from 'part:@sanity/form-builder'
 import {
     TextInput,
@@ -6,6 +6,7 @@ import {
     Box,
     Flex,
     Stack,
+    Card,
     ThemeProvider,
     studioTheme,
     Switch,
@@ -45,20 +46,20 @@ const getReferences = React.forwardRef(
         const { type, level, onFocus, value, markers } = props
         const document = props.document
         const errors = React.useMemo(() => markers.filter(isValidationErrorMarker), [markers])
-        const [loading, setLoading] = React.useState(false)
-
+        const [loading, setLoading] = useState(false)
+        const [refDocs, setRefDocs] = useState({ numReferenced: 0, references: [], _id: '', title: '' })
         const { _id, _type, title, mainImage, author } = document
         const options = props.type.options
 
         validateConfiguration(options)
 
-        const reducer = React.useCallback(
+        const reducer = useCallback(
             (queryResult) => options.reduceQueryResult(queryResult),
             [options.reduceQueryResult]
         )
 
 
-        const handleChange = React.useCallback(
+        const handleChange = useCallback(
             (val) => {
                 let validated = val
                 if (type.name === 'number') {
@@ -73,12 +74,37 @@ const getReferences = React.forwardRef(
             [props.onChange, type.name]
         )
 
-        const onChange = React.useCallback(
+        const onChange = useCallback(
             (e) => handleChange(e.target.value),
             [handleChange]
         )
 
-        const generate = React.useCallback(() => {
+        /* GET ALL REFERENCES ON LOAD */
+        _id && _type ?
+            useEffect(() => {
+                const query = `*[_type == '${_type}' && _id == '${_id}' || _id == '${_id.replace(
+                    'drafts.', '')}'] {
+                    _id,
+                     title,
+                     "references": *[references('${_id}')]{title, mainImage, author},
+                ${options.documentQuerySelection}
+            }`
+                setLoading(true)
+                client.fetch(query).then((items) => {
+                    let record = items.find(({ _id }) => _id.includes('drafts'))
+                    if (!record) {
+                        // No draft, use the original:
+                        record = items[0]
+                    }
+                    const newValue = reducer(record)
+                    handleChange(newValue)
+                    setLoading(false)
+                    setRefDocs(items[0])
+                })
+
+            }, []) : console.log(refDocs)
+
+        const generate = useCallback(() => {
             const query = `*[_type == '${_type}' && _id == '${_id}' || _id == '${_id.replace(
                 'drafts.',
                 ''
@@ -101,12 +127,14 @@ const getReferences = React.forwardRef(
                     handleChange(newValue)
                 }
                 setLoading(false)
-                console.log(items[0])
+                setRefDocs(items[0])
+                console.log(refDocs.references)
             })
         }, [handleChange, reducer, value, _id, _type])
 
         let TextComponent = type.name === 'text' ? Text : TextInput
 
+        const refs = refDocs.references;
 
         return (
             <ThemeProvider theme={studioTheme}>
@@ -139,7 +167,7 @@ const getReferences = React.forwardRef(
                                 <TextComponent
                                     disabled={!options.editable}
                                     type={type.name === 'number' ? 'number' : 'text'}
-                                    customValidity={errors.length > 0 ? errors[0].item.message : ''}
+                                    /* customValidity={errors.length > 0 ? errors[0].item.message : ''} */
                                     ref={forwardedRef}
                                     onChange={options.editable ? onChange : null}
                                     value={value || ''}
@@ -162,9 +190,17 @@ const getReferences = React.forwardRef(
                     {/* </DefaultFormField> */}
 
                 </Flex>
-                <Flex align="center">
-                    Text
-                </Flex>
+                <Stack align="center" padding={3} space={3}>
+                    {console.log(refDocs)}
+
+                    {
+                        refs.map(ref =>
+                            <Text key={ref._id} >{ref.title}</Text>
+                        )
+                    }
+
+                </Stack>
+                <Text>{refDocs ? refDocs.title : 'no refs'}</Text>
             </ThemeProvider>
         )
     }

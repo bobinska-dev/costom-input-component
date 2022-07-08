@@ -1,11 +1,13 @@
-# Sanity Blogging Content Studio
+# PLANS / TODO'S:
+    * Add prop-types to PreviewRef -> no crashing when adding new category!!!
 
-Congratulations, you have now installed the Sanity Content Studio, an open source real-time content editing environment connected to the Sanity backend.
+    * Include basic Routing to List of references
 
-Now you can do the following things:
+    * Add some kind of visual representation? Maybe it is more important to work on the other things though, since this is only a test
 
-- [Read “getting started” in the docs](https://www.sanity.io/docs/introduction/getting-started?utm_source=readme)
-- Check out the example frontend: [React/Next.js](https://github.com/sanity-io/tutorial-sanity-blog-react-next)
-- [Read the blog post about this template](https://www.sanity.io/blog/build-your-own-blog-with-sanity-and-next-js?utm_source=readme)
-- [Join the community Slack](https://slack.sanity.io/?utm_source=readme)
-- [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
+    * Add Preview Pane for referenced docList
+
+    * Add Links to docs & guides -> Better to understand 
+
+## this is very much a work in progress and playground
+Feel free to add to it 

@@ -1,6 +1,4 @@
-import ComputedField from 'sanity-plugin-computed-field'
-import CreateReferenceNumber from '../components/CreateReferenceNumber'
-import getReferences from '../components/getReferences'
+import PreviewRef from '../components/PreviewRef'
 
 export default {
   name: 'category',
@@ -12,31 +10,18 @@ export default {
       title: 'Title',
       type: 'string',
     },
-    // CreateReferenceNumber('hello', 'h3'),
+    // This is where the magic happens 👇
     {
       name: 'refNum',
       description: 'test Saskia',
       type: 'number',
-      inputComponent: getReferences,
+      inputComponent: PreviewRef,
+      // I dont think we even need this but I am not willing to delete it yet 🫥
       options: {
         documentQuerySelection: `
         "numReferenced": count(*[_type == "post" && references(^._id)])`,
         reduceQueryResult: (queryResult) => {
           return [queryResult.numReferenced]
-        },
-      },
-    },
-    {
-      name: 'numReferenced',
-      title: 'Number of references',
-      description: 'Computed by number of this categories referenced',
-      type: 'number',
-      inputComponent: ComputedField,
-      options: {
-        documentQuerySelection: `
-        "numReferenced": count(*[_type == "post" && references(^._id)])`,
-        reduceQueryResult: (queryResult) => {
-          return queryResult.numReferenced
         },
       },
     },
